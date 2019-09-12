@@ -10,58 +10,66 @@
 
 const apiKey = "8103110ef30f43aba760f8b8e90d3ee8"
 
-const searchUrl = "https://api.weatherbit.io/v2.0/current/airquality"
+const searchUrl = "http://api.weatherbit.io/v2.0/current/airquality"
 
 
 function formatQueryParams(params) {
-    const queryItems = $.param(params);
-    return queryItems.join('&');
+    const queryString = $.param(params);
+    return queryString
 }
 
-function displayResults(responseJson){
+function displayResults(responseJson) {
     console.log(responseJson)
     $('#js-aqiResults').empty();
-    for (let i = 0; i < responseJson.data.length; i++){
     $('#js-aqiResults').append(
-        `<p>${responseJson.data[i].aqi}</p>
-        <p>${responseJson.data[i].city_name}</p>`
-    )};
+        `<h1>${responseJson.city_name}</h1>
+        `)
+
+    for (let i = 0; i < responseJson.data.length; i++) {
+        const infoObj = responseJson.data[i]
+        for (let propName in infoObj) {
+            $('#js-aqiResults').append(`
+                <p><span>${propName}</span> ${infoObj[propName]}</p>`
+            )
+        }
+    };
 }
 
 
-function getAir(query){
+function getAir(query) {
     const params = {
         postal_code: query,
-        API_KEY: apiKey,
-        language: 'en'
+        key: apiKey,
+        // language: 'en'
         //"content-type": "application/json; charset=utf-8"
     };
 
- const queryString = formatQueryParams(params)
- const url = searchUrl + '?' + queryString
+    const queryString = formatQueryParams(params)
+    const url = searchUrl + '?' + queryString
 
     console.log(url)
 
 
- $('#js-aqiResults').html('<p>Checking particles in the air...</p>')
+    $('#js-aqiResults').html('<p>Checking particles in the air...</p>')
     fetch(url)
-     .then(response => {
-        if (response.ok) {
-            return response.json();
-        }
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
             throw new Error(response.statusText);
         })
-     .then(responseJson => displayResults(responseJson))
-     .catch(err => {
-        $('#js-aqiResults').empty()
-        $('#js-error').text(`something went wrong: ${err.message}`);
-    })
+        .then(responseJson => displayResults(responseJson))
+        .catch(err => {
+            $('#js-aqiResults').empty()
+            console.log(err)
+            $('#js-error').text(`something went wrong: ${err.message}`);
+        })
 }
 
 function watchForm() {
-    $('form').submit(event =>{
+    $('form').submit(event => {
         event.preventDefault()
-        const searchTerm = $("#findair-btn").val();
+        const searchTerm = $("#zip-code").val();
         getAir(searchTerm);
     })
 }
