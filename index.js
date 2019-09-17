@@ -15,25 +15,52 @@ const searchUrl = "https://api.weatherbit.io/v2.0/current/airquality"
 
 function formatQueryParams(params) {
     const queryItems = $.param(params);
-    return queryItems.join('&');
+    return queryItems;
 }
+
 
 function displayResults(responseJson){
     console.log(responseJson)
     $('#js-aqiResults').empty();
+    $('#js-aqiResults').append(`
+    <h2>${responseJson.city_name}</h2>`)
+
     for (let i = 0; i < responseJson.data.length; i++){
     $('#js-aqiResults').append(
-        `<p>${responseJson.data[i].aqi}</p>
-        <p>${responseJson.data[i].city_name}</p>`
-    )};
+        `<p>${responseJson.data[i].aqi}</p>`)
+        let aqiNum = `${responseJson.data[i].aqi}`
+        /*for (let i = 0; i < responseJson.data.length; i++) {
+            const infoObj = responseJson.data[i]
+            for (let propName in infoObj) {
+                $('#js-aqiResults').append(`
+                    <p><span>${propName}</span> ${infoObj[propName]}</p>`
+                )
+            }*/
+        $("#js-wordResponse").empty()
+          if (aqiNum <= 50) {
+        return $("#js-wordResponse").html("Good");
+    
+    }  else if (aqiNum >= 51, aqiNum < 100) {
+
+        return $("#js-wordResponse").html('Moderate');
+    }
+        else if (aqiNum >= 100, aqiNum < 150) {
+
+        return $("#js-wordResponse").html("Unhealthy For Sensative Groups")
+
+    }   else {
+
+        return $("#js-wordResponse").html('Just Stay Inside Today')
+    } 
+    }
 }
 
 
 function getAir(query){
     const params = {
         postal_code: query,
-        API_KEY: apiKey,
-        language: 'en'
+        key: apiKey,
+        //language: 'en'
         //"content-type": "application/json; charset=utf-8"
     };
 
@@ -57,11 +84,38 @@ function getAir(query){
         $('#js-error').text(`something went wrong: ${err.message}`);
     })
 }
+function formEffect(){
+    $("form").submit(event =>{
+        event.preventDefault();
+        $(".js-wrapper").fadeIn("slow");
+    })
+}
+
+function customStyle(){
+    $('.anchor-scroll').anchorScroll({
+        scrollSpeed: 800, // scroll speed
+        offsetTop: 0, // offset for fixed top bars (defaults to 0)
+        onScroll: function () { 
+          // callback on scroll start
+        },
+        scrollEnd: function () { 
+          // callback on scroll end
+        }
+    });
+}
+function sliding(){
+    $(".container").animate({width: "250px"}, 2000)
+    $('form').submit(event =>{
+    $(".result-wrapper").animate({width: "250px"}, 2000)
+    });
+}
+
 
 function watchForm() {
+    sliding();
     $('form').submit(event =>{
         event.preventDefault()
-        const searchTerm = $("#findair-btn").val();
+        const searchTerm = $("#zip-code").val();
         getAir(searchTerm);
     })
 }
