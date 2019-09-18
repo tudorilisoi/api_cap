@@ -7,23 +7,35 @@
   <meta name="author" content="">
   <meta name="description" content="Monitor National Air Quality">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
+  <link href="https://fonts.googleapis.com/css?family=Saira+Stencil+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Oswald&display=swap" rel="stylesheet">
   <link href="css/normalize.css" rel="stylesheet">
   <link href="style.css" rel="stylesheet">
 </head>
 
 <body>
+  <header class="js-header">
+    <ul id="navbar">
+      <li>Home page</li>
+      <li>Get Your Air Quality Forecast</li>
+    </ul>
+  </header>
     <section class='container'>
-        <h1>What's In Your Air</h1>
-        <form id="js-form" class="search-form">
-            <label id="search-label" for="airQuality">Check Your Air Quality Now</label>
+        <h1>What's In Your Air?</h1>
+        <form id="js-form-aqi" class="search-form">
+            <label id="search-label" for="airQuality">Check Your Air Quality Now<br> Enter A Zip Code:</label>
             <input type="text" name="location" id="zip-code" pattern="[0-9]*" maxlength="5" minlength="5" value="90046" required>
-                <button type="submit" id="findair-btn">Breath</button>
+                <button type="submit" id="findair-btn">Breathe</button>
         </form>
     </section>
-
-    <div id="js-aqiResults"></div>
-
+  <main>
+    <div class="result-wrapper">
+      <div id="js-aqiResults"></div>
+      <div id="js-wordResponse"></div>
+    </div>
+    <div id="js-forecast"></div>
+  </main>
+  <!--<script src="jqueryStyle.js"></script>-->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <script src="index.js"></script>
 </body>
